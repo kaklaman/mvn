@@ -33,7 +33,7 @@
           <providerImplementations>
               <git>jgit</git>
           </providerImplementations>
-          <branchBase>master</branchBase>          
+          <pushChanges>true</pushChanges>        
          </configuration>
          <dependencies>
           <dependency>
