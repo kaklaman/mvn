@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jim.maven</groupId>
   <artifactId>m2e-demo</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.6-SNAPSHOT</version>
   <name>m2e-demo</name>
   <description>a m2e-demo descirption</description>
   <distributionManagement>
@@ -33,7 +33,8 @@
           <providerImplementations>
               <git>jgit</git>
           </providerImplementations>
-          <pushChanges>true</pushChanges>        
+          <pushChanges>true</pushChanges>
+          <branchBase>master</branchBase>        
          </configuration>
          <dependencies>
           <dependency>
