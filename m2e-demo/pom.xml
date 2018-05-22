@@ -2,10 +2,16 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jim.maven</groupId>
   <artifactId>m2e-demo</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.3-SNAPSHOT</version>
   <name>m2e-demo</name>
   <description>a m2e-demo descirption</description>
-  
+  <distributionManagement>
+  	<repository>
+  		<id>internal.repo</id>
+  		<layout>default</layout>
+  		<url>file://${project.build.directory}/mvn-repo</url>  		
+  	</repository>
+  </distributionManagement>
   <scm>
   <developerConnection>scm:jgit:https://github.com/kaklaman/mvn.git</developerConnection>
   </scm>
