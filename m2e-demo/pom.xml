@@ -1,58 +1,141 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.jim.maven</groupId>
-  <artifactId>m2e-demo</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
-  <name>m2e-demo</name>
-  <description>a m2e-demo descirption</description>
-  <distributionManagement>
-  	<repository>
-  		<id>internal.repo</id>
-  		<layout>default</layout>
-  		<url>file://${project.build.directory}/mvn-repo</url>  		
-  	</repository>
-  </distributionManagement>
-  <scm>
-  <developerConnection>scm:jgit:https://github.com/kaklaman/mvn.git</developerConnection>
-  </scm>
-  <build>
-  	<plugins>
-  		<!-- plugin>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.jim.maven</groupId>
+	<artifactId>m2e-demo</artifactId>
+	<version>0.0.8-SNAPSHOT</version>
+	<name>m2e-demo</name>
+	<description>a m2e-demo descirption</description>
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<layout>default</layout>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
+	<scm>
+		<developerConnection>scm:jgit:https://github.com/kaklaman/mvn.git</developerConnection>
+	</scm>
+	<properties>
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>Cp1252</project.reporting.outputEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.8</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
 				<configuration>
-					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<providerImplementations>
+						<git>jgit</git>
+					</providerImplementations>
+					<pushChanges>true</pushChanges>
+					<branchBase>master</branchBase>
+					<updateVersionsToSnapshot>true</updateVersionsToSnapshot>
 				</configuration>
-			</plugin-->
-		<plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-release-plugin</artifactId>
-         <version>2.5.3</version>
-         <configuration>
-          <providerImplementations>
-              <git>jgit</git>
-          </providerImplementations>
-          <pushChanges>true</pushChanges>
-          <branchBase>master</branchBase>
-          <updateVersionsToSnapshot>true</updateVersionsToSnapshot>      
-         </configuration>
-         <dependencies>
-          <dependency>
-              <groupId>org.apache.maven.scm</groupId>
-              <artifactId>maven-scm-provider-jgit</artifactId>
-                    <version>1.9.5</version>
-          </dependency>
-         </dependencies>
-       </plugin>
-       <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.1</version>
-        <configuration>
-            <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-        </configuration>
-    </plugin>
-       
-  	</plugins>
-  </build>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.scm</groupId>
+						<artifactId>maven-scm-provider-jgit</artifactId>
+						<version>1.9.5</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.3.1</version>
+				<executions>
+					<execution>
+						<id>xjc-dtd2jaxb</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<!-- utputDirectory>target/generated-sources/main/gen</outputDirectory -->
+							<!-- Set the package of the generated code -->
+							<packageName>com.jim.dtd</packageName>
+
+							<!-- Indicate that we should use DTD input instead of XSDs -->
+							<sourceType>dtd</sourceType>
+
+							<!-- Define the directory where we should find the DTD files -->
+							<sources>
+								<source>src/main/dtd</source>
+							</sources>
+							<generateEpisode>false</generateEpisode>
+						</configuration>
+					</execution>
+					<execution>
+						<id>schemagen</id>
+						<goals>
+							<goal>schemagen</goal>
+						</goals>
+						<configuration>
+							<workDirectory>xsds</workDirectory>
+							<outputDirectory>xml-schemas</outputDirectory>
+							<clearOutputDir>true</clearOutputDir>
+							<createJavaDocAnnotations>false</createJavaDocAnnotations>
+							<sources>
+								<source>target/generated-sources/jaxb</source>
+							</sources>
+							<!-- generateEpisode>false</generateEpisode -->
+							<schemaSourceExcludeFilters>
+								<schemaSourceExcludeFilter
+									implementation="org.codehaus.mojo.jaxb2.shared.filters.pattern.PatternFileFilter">
+									<patterns>
+										<pattern>\.xsd</pattern>
+									</patterns>
+								</schemaSourceExcludeFilter>
+							</schemaSourceExcludeFilters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>read-xsds</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<phase>verify</phase>
+					</execution>
+
+				</executions>
+				<configuration>
+					<executable>java</executable>
+					<mainClass>com.jim.demo.demo1.ReadGeneratedXsds</mainClass>
+					<arguments>
+						<argument>xsds</argument>
+						<!-- automatically creates the classpath using all project dependencies, 
+							also adding the project build directory -->
+						<!-- classpath /-->
+						
+					</arguments>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>
